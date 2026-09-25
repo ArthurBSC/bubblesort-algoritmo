@@ -1,0 +1,19 @@
+﻿versao;cenario;n;comparacoes;trocas;custo_total;tempo_ms
+Básica;Melhor (já ordenada);10;81;0;651;0,047
+Otimizada;Melhor (já ordenada);10;9;0;82;0,013
+Básica;Médio (aleatória);10;81;28;819;0,050
+Otimizada;Médio (aleatória);10;45;28;657;0,051
+Básica;Pior (decrescente);10;81;45;921;0,049
+Otimizada;Pior (decrescente);10;45;45;793;0,053
+Básica;Melhor (já ordenada);100;9801;0;69501;4,607
+Otimizada;Melhor (já ordenada);100;99;0;712;0,073
+Básica;Médio (aleatória);100;9801;2371;83727;5,136
+Otimizada;Médio (aleatória);100;4905;2371;54301;5,852
+Básica;Pior (decrescente);100;9801;4950;99201;5,768
+Otimizada;Pior (decrescente);100;4950;4950;75358;5,906
+Básica;Melhor (já ordenada);1000;998001;0;6995001;509,262
+Otimizada;Melhor (já ordenada);1000;999;0;7012;0,808
+Básica;Médio (aleatória);1000;998001;253453;8515719;602,700
+Otimizada;Médio (aleatória);1000;499149;253453;5532378;782,421
+Básica;Pior (decrescente);1000;998001;499500;9992001;679,197
+Otimizada;Pior (decrescente);1000;499500;499500;7503508;688,911

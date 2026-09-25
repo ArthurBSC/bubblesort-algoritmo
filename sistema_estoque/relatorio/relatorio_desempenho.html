@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório de Buscas</title>
+<style>
+:root { --bg:#fbfbf9; --fg:#1f2328; --muted:#5f6670; --line:#d9dcd6; --c1:#c2410c; --c2:#1d4ed8; --card:#ffffff; }
+@media (prefers-color-scheme: dark) { :root { --bg:#16181c; --fg:#e8e9eb; --muted:#9aa1ab; --line:#33373e; --c1:#fb923c; --c2:#7aa2ff; --card:#1d2025; } }
+body { background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, "Segoe UI", sans-serif; margin:0; padding:24px 16px; }
+main { max-width:860px; margin:0 auto; }
+h1 { font-size:1.6rem; margin:0 0 4px; } .sub { color:var(--muted); margin:0 0 24px; }
+h2 { font-size:1.15rem; margin:32px 0 8px; border-bottom:1px solid var(--line); padding-bottom:4px; }
+p { text-align:justify; }
+.tw { overflow-x:auto; } table { border-collapse:collapse; width:100%; font-size:.9rem; font-variant-numeric:tabular-nums; background:var(--card); }
+th, td { border:1px solid var(--line); padding:6px 8px; text-align:right; } th { background:color-mix(in srgb, var(--line) 45%, transparent); }
+td:first-child, th:first-child { text-align:left; }
+figure { margin:16px 0; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px; }
+svg { width:100%; height:auto; } .t { fill:var(--fg); font-weight:600; font-size:14px; }
+.a { fill:var(--muted); font-size:12px; } .g { stroke:var(--line); }
+.s1 { stroke:var(--c1); stroke-width:2.5; } .s2 { stroke:var(--c2); stroke-width:2.5; }
+circle.s1 { fill:var(--c1); } circle.s2 { fill:var(--c2); }
+</style></head>
+<body><main>
+<h1>Relatório de Complexidade — Busca Linear x Busca Binária</h1>
+<p class="sub">Sistema de Estoque · Complexidade de Algoritmos · Etapa 5</p>
+<h2>1. Objetivo</h2><p>Identificar qual das estruturas de busca implementadas no Sistema de Estoque — Busca Linear ou Busca Binária — obteve melhor desempenho, relacionando o tamanho da entrada (n = quantidade de produtos cadastrados) com a quantidade de operações realizadas e com o tempo de execução. Como a Busca Binária só funciona em lista ordenada, também foi analisado o custo do Bubble Sort (Etapa 4).</p><h2>2. Metodologia</h2><p>Para cada n ∈ {10, 100, 1.000, 10.000, 100.000} foi criada uma lista ordenada de produtos com códigos 10, 20, 30, ... Em cada lista foram medidos três cenários: melhor caso (Linear: 1º elemento; Binária: elemento do meio), pior caso (código inexistente, maior que todos) e caso médio (média de 1.000 buscas por códigos existentes sorteados).</p><p>Foram contados os passos de cada busca — na Busca Linear, cada elemento examinado; na Busca Binária, cada divisão da lista ao meio — que é a contagem usada nos exemplos da atividade (&quot;foram necessárias 6 verificações&quot;, &quot;busca binária: 3 passos de comparação&quot;). Também foi calculado o custo T(n) pelo modelo da aula: comparação = 1, atribuição = 2, operação matemática = 3; nesse custo a Busca Binária pesa mais por passo, pois faz duas comparações (igualdade e maior/menor) e o cálculo do meio. O tempo foi medido com time.perf_counter(), sem a contagem de operações, e depende da máquina; por isso a análise principal usa a contagem.</p><p>Ambiente: Python 3.14.4 — Windows 11 — semente aleatória 2026 — gerado em 25/09/2026 10:19.</p><h2>3. Funções de custo</h2><p>Busca Linear — pior caso (percorre os n elementos e não encontra): 1 atribuição (i = 0) + (n + 1) testes do laço + n comparações com o código + n somas + n atribuições (i = i + 1). T(n) = 2 + (n + 1) + n + 3n + 2n = 7n + 3 → O(n).</p><p>Busca Binária — pior caso (k passagens pelo laço, k = ⌊log₂ n⌋ + 1): inicialização (2 atribuições + 1 subtração) = 7; por passagem: 1 teste do laço + cálculo do meio (2 operações + 1 atribuição = 8) + 2 comparações + atualização de ini/fim (1 operação + 1 atribuição = 5) = 16; mais o teste final = 1. T(k) = 16k + 8 → O(log n).</p><h2>4. Resultados — passos de cada busca</h2><p>A Busca Linear cresce na mesma proporção de n: multiplicar n por 10 multiplica os passos por 10, porque no pior caso ela examina os n elementos. A Busca Binária cresce muito devagar: multiplicar n por 10 acrescenta só cerca de 3 passos (log₂ 10 ≈ 3,3), porque cada passo descarta metade do que restou.</p><figure><svg viewBox="0 0 660 370" role="img" aria-label="Passos no pior caso (escala logarítmica)">
+<text x="70" y="22" class="t">Passos no pior caso (escala logarítmica)</text>
+<line x1="70" x2="630" y1="300.0" y2="300.0" class="g"/>
+<text x="62" y="304.0" class="a" text-anchor="end">1</text>
+<line x1="70" x2="630" y1="248.0" y2="248.0" class="g"/>
+<text x="62" y="252.0" class="a" text-anchor="end">10</text>
+<line x1="70" x2="630" y1="196.0" y2="196.0" class="g"/>
+<text x="62" y="200.0" class="a" text-anchor="end">100</text>
+<line x1="70" x2="630" y1="144.0" y2="144.0" class="g"/>
+<text x="62" y="148.0" class="a" text-anchor="end">1.000</text>
+<line x1="70" x2="630" y1="92.0" y2="92.0" class="g"/>
+<text x="62" y="96.0" class="a" text-anchor="end">10.000</text>
+<line x1="70" x2="630" y1="40.0" y2="40.0" class="g"/>
+<text x="62" y="44.0" class="a" text-anchor="end">100.000</text>
+<text x="70.0" y="320" class="a" text-anchor="middle">10</text>
+<text x="210.0" y="320" class="a" text-anchor="middle">100</text>
+<text x="350.0" y="320" class="a" text-anchor="middle">1.000</text>
+<text x="490.0" y="320" class="a" text-anchor="middle">10.000</text>
+<text x="630.0" y="320" class="a" text-anchor="middle">100.000</text>
+<text x="350.0" y="340" class="a" text-anchor="middle">n (quantidade de produtos)</text>
+<text x="16" y="170.0" class="a" text-anchor="middle" transform="rotate(-90 16 170.0)">passos</text>
+<polyline points="70.0,248.0 210.0,196.0 350.0,144.0 490.0,92.0 630.0,40.0" class="s1" fill="none"/>
+<circle cx="70.0" cy="248.0" r="4" class="s1 p"><title>Busca Linear: n=10 → 10,0</title></circle>
+<circle cx="210.0" cy="196.0" r="4" class="s1 p"><title>Busca Linear: n=100 → 100,0</title></circle>
+<circle cx="350.0" cy="144.0" r="4" class="s1 p"><title>Busca Linear: n=1.000 → 1.000,0</title></circle>
+<circle cx="490.0" cy="92.0" r="4" class="s1 p"><title>Busca Linear: n=10.000 → 10.000,0</title></circle>
+<circle cx="630.0" cy="40.0" r="4" class="s1 p"><title>Busca Linear: n=100.000 → 100.000,0</title></circle>
+<line x1="70" x2="92" y1="360" y2="360" class="s1"/>
+<text x="98" y="364" class="a">Busca Linear</text>
+<polyline points="70.0,268.7 210.0,256.1 350.0,248.0 490.0,240.4 630.0,236.0" class="s2" fill="none"/>
+<circle cx="70.0" cy="268.7" r="4" class="s2 p"><title>Busca Binária: n=10 → 4,0</title></circle>
+<circle cx="210.0" cy="256.1" r="4" class="s2 p"><title>Busca Binária: n=100 → 7,0</title></circle>
+<circle cx="350.0" cy="248.0" r="4" class="s2 p"><title>Busca Binária: n=1.000 → 10,0</title></circle>
+<circle cx="490.0" cy="240.4" r="4" class="s2 p"><title>Busca Binária: n=10.000 → 14,0</title></circle>
+<circle cx="630.0" cy="236.0" r="4" class="s2 p"><title>Busca Binária: n=100.000 → 17,0</title></circle>
+<line x1="260" x2="282" y1="360" y2="360" class="s2"/>
+<text x="288" y="364" class="a">Busca Binária</text>
+</svg></figure><div class='tw'><table><thead><tr><th>n</th><th>Linear melhor</th><th>Linear médio</th><th>Linear pior</th><th>Binária melhor</th><th>Binária médio</th><th>Binária pior</th></tr></thead><tbody><tr><td>10</td><td>1</td><td>5,6</td><td>10</td><td>1</td><td>2,9</td><td>4</td></tr><tr><td>100</td><td>1</td><td>50,1</td><td>100</td><td>1</td><td>5,8</td><td>7</td></tr><tr><td>1.000</td><td>1</td><td>497,1</td><td>1.000</td><td>1</td><td>8,9</td><td>10</td></tr><tr><td>10.000</td><td>1</td><td>5.059,4</td><td>10.000</td><td>1</td><td>12,3</td><td>14</td></tr><tr><td>100.000</td><td>1</td><td>48.638,0</td><td>100.000</td><td>1</td><td>15,7</td><td>17</td></tr></tbody></table></div><h2>5. Resultados — custo T(n) no pior caso</h2><p>Os valores medidos pelo contador coincidem com as fórmulas T(n) = 7n + 3 (Linear) e T(k) = 16k + 8 (Binária), onde k é o número de passos da tabela anterior, k = ⌊log₂ n⌋ + 1. Isso confirma o modelo matemático construído na seção 3.</p><div class='tw'><table><thead><tr><th>n</th><th>Linear medido</th><th>Linear 7n+3</th><th>Binária medido</th><th>Binária 16k+8</th></tr></thead><tbody><tr><td>10</td><td>73</td><td>73</td><td>72</td><td>72</td></tr><tr><td>100</td><td>703</td><td>703</td><td>120</td><td>120</td></tr><tr><td>1.000</td><td>7.003</td><td>7.003</td><td>168</td><td>168</td></tr><tr><td>10.000</td><td>70.003</td><td>70.003</td><td>232</td><td>232</td></tr><tr><td>100.000</td><td>700.003</td><td>700.003</td><td>280</td><td>280</td></tr></tbody></table></div><h2>6. Resultados — tempo médio real por busca (µs)</h2><p>Com poucos elementos a diferença é pequena, pois a Linear faz menos trabalho por passo. Conforme n cresce, o tempo da Linear sobe proporcionalmente (×10 a cada ×10 em n) e o da Binária aumenta só um pouco a cada ×10 em n.</p><figure><svg viewBox="0 0 660 370" role="img" aria-label="Tempo médio por busca (escala logarítmica)">
+<text x="70" y="22" class="t">Tempo médio por busca (escala logarítmica)</text>
+<line x1="70" x2="630" y1="300.0" y2="300.0" class="g"/>
+<text x="62" y="304.0" class="a" text-anchor="end">1</text>
+<line x1="70" x2="630" y1="248.0" y2="248.0" class="g"/>
+<text x="62" y="252.0" class="a" text-anchor="end">10</text>
+<line x1="70" x2="630" y1="196.0" y2="196.0" class="g"/>
+<text x="62" y="200.0" class="a" text-anchor="end">100</text>
+<line x1="70" x2="630" y1="144.0" y2="144.0" class="g"/>
+<text x="62" y="148.0" class="a" text-anchor="end">1.000</text>
+<line x1="70" x2="630" y1="92.0" y2="92.0" class="g"/>
+<text x="62" y="96.0" class="a" text-anchor="end">10.000</text>
+<line x1="70" x2="630" y1="40.0" y2="40.0" class="g"/>
+<text x="62" y="44.0" class="a" text-anchor="end">100.000</text>
+<text x="70.0" y="320" class="a" text-anchor="middle">10</text>
+<text x="210.0" y="320" class="a" text-anchor="middle">100</text>
+<text x="350.0" y="320" class="a" text-anchor="middle">1.000</text>
+<text x="490.0" y="320" class="a" text-anchor="middle">10.000</text>
+<text x="630.0" y="320" class="a" text-anchor="middle">100.000</text>
+<text x="350.0" y="340" class="a" text-anchor="middle">n (quantidade de produtos)</text>
+<text x="16" y="170.0" class="a" text-anchor="middle" transform="rotate(-90 16 170.0)">microssegundos</text>
+<polyline points="70.0,289.6 210.0,236.4 350.0,185.0 490.0,133.2 630.0,83.4" class="s1" fill="none"/>
+<circle cx="70.0" cy="289.6" r="4" class="s1 p"><title>Busca Linear: n=10 → 1,6</title></circle>
+<circle cx="210.0" cy="236.4" r="4" class="s1 p"><title>Busca Linear: n=100 → 16,7</title></circle>
+<circle cx="350.0" cy="185.0" r="4" class="s1 p"><title>Busca Linear: n=1.000 → 162,7</title></circle>
+<circle cx="490.0" cy="133.2" r="4" class="s1 p"><title>Busca Linear: n=10.000 → 1.612,7</title></circle>
+<circle cx="630.0" cy="83.4" r="4" class="s1 p"><title>Busca Linear: n=100.000 → 14.659,0</title></circle>
+<line x1="70" x2="92" y1="360" y2="360" class="s1"/>
+<text x="98" y="364" class="a">Busca Linear</text>
+<polyline points="70.0,284.5 210.0,269.7 350.0,260.5 490.0,249.4 630.0,243.2" class="s2" fill="none"/>
+<circle cx="70.0" cy="284.5" r="4" class="s2 p"><title>Busca Binária: n=10 → 2,0</title></circle>
+<circle cx="210.0" cy="269.7" r="4" class="s2 p"><title>Busca Binária: n=100 → 3,8</title></circle>
+<circle cx="350.0" cy="260.5" r="4" class="s2 p"><title>Busca Binária: n=1.000 → 5,8</title></circle>
+<circle cx="490.0" cy="249.4" r="4" class="s2 p"><title>Busca Binária: n=10.000 → 9,4</title></circle>
+<circle cx="630.0" cy="243.2" r="4" class="s2 p"><title>Busca Binária: n=100.000 → 12,4</title></circle>
+<line x1="260" x2="282" y1="360" y2="360" class="s2"/>
+<text x="288" y="364" class="a">Busca Binária</text>
+</svg></figure><div class='tw'><table><thead><tr><th>n</th><th>Linear (µs)</th><th>Binária (µs)</th><th>Binária mais rápida</th></tr></thead><tbody><tr><td>10</td><td>1,59</td><td>1,99</td><td>0,8x</td></tr><tr><td>100</td><td>16,70</td><td>3,83</td><td>4,4x</td></tr><tr><td>1.000</td><td>162,68</td><td>5,76</td><td>28,2x</td></tr><tr><td>10.000</td><td>1.612,72</td><td>9,38</td><td>171,9x</td></tr><tr><td>100.000</td><td>14.659,00</td><td>12,37</td><td>1.185,3x</td></tr></tbody></table></div><h2>7. Bubble Sort (Etapa 4) — custo de ordenar</h2><p>Versão básica (slides, Exercício 5): sempre (n − 1) passadas completas → (n − 1)² comparações em qualquer cenário, O(n²). Versão otimizada (Exercício 6): diminui o fim a cada passada e para quando uma passada não faz trocas → melhor caso n − 1 comparações, O(n); pior caso n(n − 1)/2 comparações e trocas, O(n²). Para n = 10.000, pelas fórmulas, a versão básica faria (n − 1)² = 99.980.001 comparações e a otimizada no pior caso n(n − 1)/2 = 49.995.000 (rode com --completo para medir).</p><div class='tw'><table><thead><tr><th>Versão</th><th>Cenário</th><th>n</th><th>Comparações</th><th>Trocas</th><th>Custo T(n)</th><th>Tempo (ms)</th></tr></thead><tbody><tr><td>Básica</td><td>Melhor (já ordenada)</td><td>10</td><td>81</td><td>0</td><td>651</td><td>0,05</td></tr><tr><td>Otimizada</td><td>Melhor (já ordenada)</td><td>10</td><td>9</td><td>0</td><td>82</td><td>0,01</td></tr><tr><td>Básica</td><td>Médio (aleatória)</td><td>10</td><td>81</td><td>28</td><td>819</td><td>0,05</td></tr><tr><td>Otimizada</td><td>Médio (aleatória)</td><td>10</td><td>45</td><td>28</td><td>657</td><td>0,05</td></tr><tr><td>Básica</td><td>Pior (decrescente)</td><td>10</td><td>81</td><td>45</td><td>921</td><td>0,05</td></tr><tr><td>Otimizada</td><td>Pior (decrescente)</td><td>10</td><td>45</td><td>45</td><td>793</td><td>0,05</td></tr><tr><td>Básica</td><td>Melhor (já ordenada)</td><td>100</td><td>9.801</td><td>0</td><td>69.501</td><td>4,61</td></tr><tr><td>Otimizada</td><td>Melhor (já ordenada)</td><td>100</td><td>99</td><td>0</td><td>712</td><td>0,07</td></tr><tr><td>Básica</td><td>Médio (aleatória)</td><td>100</td><td>9.801</td><td>2.371</td><td>83.727</td><td>5,14</td></tr><tr><td>Otimizada</td><td>Médio (aleatória)</td><td>100</td><td>4.905</td><td>2.371</td><td>54.301</td><td>5,85</td></tr><tr><td>Básica</td><td>Pior (decrescente)</td><td>100</td><td>9.801</td><td>4.950</td><td>99.201</td><td>5,77</td></tr><tr><td>Otimizada</td><td>Pior (decrescente)</td><td>100</td><td>4.950</td><td>4.950</td><td>75.358</td><td>5,91</td></tr><tr><td>Básica</td><td>Melhor (já ordenada)</td><td>1.000</td><td>998.001</td><td>0</td><td>6.995.001</td><td>509,26</td></tr><tr><td>Otimizada</td><td>Melhor (já ordenada)</td><td>1.000</td><td>999</td><td>0</td><td>7.012</td><td>0,81</td></tr><tr><td>Básica</td><td>Médio (aleatória)</td><td>1.000</td><td>998.001</td><td>253.453</td><td>8.515.719</td><td>602,70</td></tr><tr><td>Otimizada</td><td>Médio (aleatória)</td><td>1.000</td><td>499.149</td><td>253.453</td><td>5.532.378</td><td>782,42</td></tr><tr><td>Básica</td><td>Pior (decrescente)</td><td>1.000</td><td>998.001</td><td>499.500</td><td>9.992.001</td><td>679,20</td></tr><tr><td>Otimizada</td><td>Pior (decrescente)</td><td>1.000</td><td>499.500</td><td>499.500</td><td>7.503.508</td><td>688,91</td></tr></tbody></table></div><h2>8. Vale a pena ordenar para usar a Busca Binária?</h2><p>Se a lista chegar desordenada, a Binária exige ordenar antes. Ordenar é um custo único; cada busca depois economiza (comparações da Linear − comparações da Binária). O número mínimo de buscas m para compensar é: m &gt; custo de ordenar ÷ economia por busca. No Sistema de Estoque isso é ainda mais favorável, pois a Inserção Ordenada (Etapa 3) mantém a lista sempre ordenada e o Bubble Sort só é necessário uma vez, ao importar dados desordenados.</p><div class='tw'><table><thead><tr><th>n</th><th>Comparações p/ ordenar (Bubble otimizado, médio)</th><th>Linear: comparações (médio)</th><th>Binária: comparações (médio)</th><th>Buscas para compensar</th></tr></thead><tbody><tr><td>10</td><td>45</td><td>5,6</td><td>4,7</td><td>49</td></tr><tr><td>100</td><td>4.905</td><td>50,1</td><td>10,7</td><td>125</td></tr><tr><td>1.000</td><td>499.149</td><td>497,1</td><td>16,9</td><td>1.040</td></tr></tbody></table></div><h2>9. Conclusão</h2><p>A Busca Binária obteve o melhor desempenho. Com n = 100.000 produtos, ela precisou em média de 15,7 passos contra 48.638,0 da Linear (≈ 3.096 vezes menos) e foi ≈ 1.185 vezes mais rápida no tempo medido. No pior caso a Linear precisou examinar os 100.000 elementos e a Binária resolveu em apenas 17 passos.</p><p>Isso acontece porque a Busca Linear é O(n): quando a quantidade de produtos aumenta, o trabalho cresce na mesma proporção. Já a Busca Binária é O(log n): a cada passo ela descarta metade dos elementos restantes, então dobrar a quantidade de produtos acrescenta apenas uma passagem pelo laço.</p><p>A condição para usar a Binária é a lista estar ordenada. Ordenar com Bubble Sort custa O(n²) e, pela seção 8, só se paga depois de aproximadamente n buscas (≈ n²/2 comparações para ordenar ÷ ≈ n/2 economizadas por busca). Por isso o projeto mantém a lista sempre ordenada com a Inserção Ordenada (Etapa 3): o Bubble Sort é usado apenas uma vez, ao carregar dados desordenados, e a partir daí todas as buscas aproveitam o O(log n). A Busca Linear só é preferível quando a lista está desordenada e serão feitas poucas buscas (menos que n).</p>
+</main></body></html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de Estoque</title>
+<style>
+:root {
+  --bg: #f6f6f3; --card: #ffffff; --fg: #1c1f23; --muted: #666e78; --line: #d8dcd4;
+  --azul: #1d4ed8; --azul-suave: #dbe5ff; --laranja: #c2410c; --laranja-suave: #ffe6d5;
+  --verde: #15803d; --verde-suave: #d8f3e0; --vermelho: #b91c1c; --amarelo: #a16207;
+  --sombra: 0 1px 3px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15171b; --card: #1d2026; --fg: #e9eaec; --muted: #98a0aa; --line: #333840;
+    --azul: #7aa2ff; --azul-suave: #24314f; --laranja: #fb923c; --laranja-suave: #43290f;
+    --verde: #4ade80; --verde-suave: #14361f; --vermelho: #fca5a5; --amarelo: #fbbf24;
+    --sombra: 0 1px 3px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15171b; --card: #1d2026; --fg: #e9eaec; --muted: #98a0aa; --line: #333840;
+  --azul: #7aa2ff; --azul-suave: #24314f; --laranja: #fb923c; --laranja-suave: #43290f;
+  --verde: #4ade80; --verde-suave: #14361f; --vermelho: #fca5a5; --amarelo: #fbbf24;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.5 system-ui, "Segoe UI", Roboto, sans-serif;
+  padding: 20px 16px 48px;
+}
+main { max-width: 1100px; margin: 0 auto; }
+header { margin-bottom: 20px; }
+h1 { font-size: 1.5rem; margin: 0 0 2px; }
+.sub { color: var(--muted); font-size: .92rem; margin: 0; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px; margin-bottom: 16px; box-shadow: var(--sombra);
+}
+.card h2 { font-size: 1rem; margin: 0 0 12px; letter-spacing: .01em; }
+.linha { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+label { display: block; font-size: .78rem; color: var(--muted); margin-bottom: 3px; }
+input, select {
+  font: inherit; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--fg); min-width: 0;
+}
+input:focus, select:focus { outline: 2px solid var(--azul); outline-offset: 1px; }
+button {
+  font: inherit; font-weight: 500; padding: 8px 14px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--fg);
+}
+button:hover:not(:disabled) { border-color: var(--azul); color: var(--azul); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.primario { background: var(--azul); border-color: var(--azul); color: #fff; }
+button.primario:hover:not(:disabled) { filter: brightness(1.1); color: #fff; }
+button.laranja { background: var(--laranja); border-color: var(--laranja); color: #fff; }
+button.laranja:hover:not(:disabled) { filter: brightness(1.1); color: #fff; }
+
+/* ---- vetor ---- */
+.vetor { display: flex; flex-wrap: wrap; gap: 6px; }
+.celula { text-align: center; width: 62px; }
+.idx { font-size: .68rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.caixa {
+  border: 2px solid var(--line); border-radius: 6px; padding: 7px 2px;
+  font-weight: 600; font-variant-numeric: tabular-nums; background: var(--bg);
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.nome { font-size: .62rem; color: var(--muted); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.caixa.verificando { border-color: var(--laranja); background: var(--laranja-suave); transform: translateY(-4px); }
+.caixa.faixa { background: var(--azul-suave); }
+.caixa.achou { border-color: var(--verde); background: var(--verde-suave); }
+.caixa.trocou { border-color: var(--laranja); background: var(--laranja-suave); }
+.caixa.destaque { border-color: var(--verde); background: var(--verde-suave); }
+.caixa.descartado { opacity: .35; }
+
+.selo { display: inline-block; font-size: .75rem; padding: 2px 9px; border-radius: 999px;
+  border: 1px solid; font-weight: 600; }
+.selo.ok { color: var(--verde); border-color: var(--verde); }
+.selo.nao { color: var(--amarelo); border-color: var(--amarelo); }
+
+#msg { padding: 10px 12px; border-radius: 6px; border-left: 4px solid var(--muted);
+  background: var(--bg); font-size: .92rem; min-height: 20px; }
+#msg.ok { border-color: var(--verde); }
+#msg.erro { border-color: var(--vermelho); }
+#msg.aviso { border-color: var(--amarelo); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+.metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+.metrica { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--bg); }
+.metrica .v { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.metrica .r { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.metrica.destaque .v { color: var(--azul); }
+
+table { border-collapse: collapse; width: 100%; font-size: .88rem; font-variant-numeric: tabular-nums; }
+th, td { border: 1px solid var(--line); padding: 6px 9px; text-align: right; }
+th { background: color-mix(in srgb, var(--line) 40%, transparent); }
+td:first-child, th:first-child { text-align: left; }
+.vencedor { color: var(--verde); font-weight: 600; }
+.legenda { font-size: .78rem; color: var(--muted); margin-top: 8px; }
+.tw { overflow-x: auto; }
+@media (max-width: 560px) { .celula { width: 52px; } body { padding: 12px 12px 40px; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Sistema de Estoque</h1>
+  <p class="sub">Complexidade de Algoritmos &middot; Inserção Ordenada, Bubble Sort e Buscas
+    &middot; <strong>n</strong> = quantidade de produtos cadastrados</p>
+</header>
+
+<div class="card">
+  <h2>Lista de produtos (vetor ordenado por código) &nbsp; <span id="selo" class="selo nao">—</span></h2>
+  <div class="vetor" id="vetor"></div>
+  <p class="legenda" id="legenda">n = 0 produtos</p>
+</div>
+
+<div class="card"><div id="msg">Carregando…</div></div>
+
+<div class="card">
+  <h2>Operações contadas na última ação</h2>
+  <div class="metricas" id="metricas"></div>
+  <p class="legenda">Modelo de custo da Aula 02: comparação = 1, atribuição = 2, operação matemática = 3.</p>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Etapa 4 &middot; Bubble Sort</h2>
+    <div class="linha">
+      <div><label for="versao">Versão</label>
+        <select id="versao">
+          <option value="otimizada">Otimizada (Exercício 6)</option>
+          <option value="basica">Básica (Exercício 5)</option>
+        </select></div>
+      <button class="laranja" id="btOrdenar">Ordenar</button>
+    </div>
+    <div class="linha" style="margin-top:10px">
+      <div><label for="qtdGerar">Gerar lista desordenada com</label>
+        <input id="qtdGerar" type="number" value="10" min="2" max="50" style="width:80px"> </div>
+      <button id="btDesordenar">Gerar</button>
+      <button id="btReiniciar">Recarregar exemplo</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Etapa 3 &middot; Inserção Ordenada</h2>
+    <div class="linha">
+      <div><label for="insCodigo">Código</label>
+        <input id="insCodigo" type="number" value="35" style="width:82px"></div>
+      <div style="flex:1"><label for="insNome">Nome</label>
+        <input id="insNome" type="text" placeholder="Caixa de som" style="width:100%"></div>
+      <div><label for="insQtd">Qtd</label>
+        <input id="insQtd" type="number" value="10" min="0" style="width:70px"></div>
+      <button class="primario" id="btInserir">Inserir</button>
+    </div>
+    <div class="linha" style="margin-top:10px">
+      <div><label for="remCodigo">Remover o código</label>
+        <input id="remCodigo" type="number" value="35" style="width:82px"></div>
+      <button id="btRemover">Remover</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Etapa 5 &middot; Buscas</h2>
+    <div class="linha">
+      <div><label for="busCodigo">Código procurado</label>
+        <input id="busCodigo" type="number" value="70" style="width:90px"></div>
+      <button class="primario" id="btBinaria">Busca Binária</button>
+      <button id="btLinear">Busca Linear</button>
+      <button id="btComparar">Comparar as duas</button>
+    </div>
+    <p class="legenda">A busca é animada no vetor acima: laranja = elemento sendo verificado,
+      azul = faixa ainda considerada pela binária, verde = encontrado.</p>
+  </div>
+</div>
+
+<div class="card" id="cardComparacao" hidden>
+  <h2>Comparação: Busca Linear &times; Busca Binária</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Busca</th><th>Posição</th><th>Passos</th><th>Comparações entre elementos</th>
+      <th>Atribuições</th><th>Op. matemáticas</th><th>Custo T(n)</th></tr></thead>
+    <tbody id="corpoComparacao"></tbody>
+  </table></div>
+  <p class="legenda" id="legendaComparacao"></p>
+</div>
+
+<div class="card">
+  <h2>Relatório de desempenho (Etapa 5)</h2>
+  <p class="sub">Gere pelo terminal com <code>python relatorio.py</code> e abra a versão com gráficos:</p>
+  <p style="margin:10px 0 0"><a href="/relatorio" target="_blank">Abrir relatório de desempenho &rarr;</a></p>
+</div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let estado = { produtos: [], n: 0, ordenada: false };
+let animando = false;
+
+async function api(acao, dados = {}) {
+  const r = await fetch("/api", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ acao, ...dados })
+  });
+  if (!r.ok) throw new Error("Falha na requisição");
+  return r.json();
+}
+
+function travar(v) {
+  animando = v;
+  document.querySelectorAll("button").forEach(b => b.disabled = v);
+}
+
+function desenharVetor(classes = {}) {
+  const alvo = $("vetor");
+  alvo.innerHTML = "";
+  if (estado.n === 0) {
+    alvo.innerHTML = '<p class="sub">Estoque vazio.</p>';
+    return;
+  }
+  estado.produtos.forEach((p, i) => {
+    const cel = document.createElement("div");
+    cel.className = "celula";
+    cel.innerHTML =
+      `<div class="idx">${i}</div>` +
+      `<div class="caixa ${classes[i] || ""}" id="cx${i}">${p.codigo}</div>` +
+      `<div class="nome" title="${p.nome} (qtd ${p.quantidade})">${p.nome}</div>`;
+    alvo.appendChild(cel);
+  });
+}
+
+function aplicar(resposta) {
+  estado = resposta;
+  $("msg").textContent = resposta.mensagem || "";
+  $("msg").className = resposta.tipo || "";
+  const selo = $("selo");
+  selo.textContent = resposta.ordenada ? "lista ordenada" : "lista desordenada";
+  selo.className = "selo " + (resposta.ordenada ? "ok" : "nao");
+  $("legenda").textContent =
+    `n = ${resposta.n} produto(s) cadastrados (capacidade ${resposta.max})`;
+  desenharVetor();
+  mostrarMetricas(resposta.contador,
+    resposta.comparacao ? "As duas buscas foram medidas: veja a tabela comparativa abaixo." : null);
+  return resposta;
+}
+
+function mostrarMetricas(c, aviso) {
+  const alvo = $("metricas");
+  if (!c) { alvo.innerHTML = `<p class="sub">${aviso || "Nenhuma operação medida ainda."}</p>`; return; }
+  const itens = [
+    ["Passos", c.n_passos, true],
+    ["Comparações entre elementos", c.comp_elementos, false],
+    ["Comparações (total)", c.comparacoes, false],
+    ["Atribuições", c.atribuicoes, false],
+    ["Op. matemáticas", c.matematicas, false],
+    ["Trocas", c.trocas, false],
+    ["Deslocamentos", c.deslocamentos, false],
+    ["Custo T(n)", c.custo, true],
+  ];
+  alvo.innerHTML = itens.map(([r, v, d]) =>
+    `<div class="metrica ${d ? "destaque" : ""}"><div class="v">${v.toLocaleString("pt-BR")}</div>
+     <div class="r">${r}</div></div>`).join("");
+}
+
+const dormir = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function animarBusca(resposta) {
+  const c = resposta.contador;
+  if (!c || !c.passos || !c.passos.length) return;
+  const espera = Math.max(120, Math.min(600, 2200 / c.passos.length));
+  for (const passo of c.passos) {
+    const classes = {};
+    if (passo.info && passo.info.ini !== undefined) {
+      for (let i = 0; i < estado.n; i++) {
+        if (i < passo.info.ini || i > passo.info.fim) classes[i] = "descartado";
+        else classes[i] = "faixa";
+      }
+    }
+    classes[passo.i] = "verificando";
+    desenharVetor(classes);
+    await dormir(espera);
+  }
+  const achou = (resposta.destaque || [])[0];
+  desenharVetor(achou >= 0 && achou !== undefined ? { [achou]: "achou" } : {});
+}
+
+async function animarOrdenacao(resposta) {
+  const c = resposta.contador;
+  if (!c || !c.passos || !c.passos.length) return;
+  const espera = Math.max(30, Math.min(260, 4000 / c.passos.length));
+  for (const passo of c.passos) {
+    desenharVetor({ [passo.i]: passo.info.trocou ? "trocou" : "verificando",
+                    [passo.i + 1]: passo.info.trocou ? "trocou" : "verificando" });
+    await dormir(espera);
+  }
+  desenharVetor();
+}
+
+async function executar(acao, dados, animacao) {
+  if (animando) return;
+  travar(true);
+  try {
+    const r = aplicar(await api(acao, dados));
+    $("cardComparacao").hidden = !r.comparacao;
+    if (r.comparacao) mostrarComparacao(r.comparacao);
+    if (animacao) await animacao(r);
+  } catch (e) {
+    $("msg").textContent = "Erro: " + e.message + ". O servidor ainda está rodando?";
+    $("msg").className = "erro";
+  } finally {
+    travar(false);
+  }
+}
+
+function mostrarComparacao(cmp) {
+  const linha = (nome, d, vencedor) =>
+    `<tr><td>${nome}</td><td>${d.posicao === -1 ? "não achou" : d.posicao}</td>
+     <td class="${vencedor ? "vencedor" : ""}">${d.n_passos}</td>
+     <td>${d.comp_elementos}</td><td>${d.atribuicoes}</td><td>${d.matematicas}</td>
+     <td class="${vencedor ? "vencedor" : ""}">${d.custo}</td></tr>`;
+  const bin = cmp.binaria.n_passos <= cmp.linear.n_passos;
+  $("corpoComparacao").innerHTML =
+    linha("Busca Linear", cmp.linear, !bin) + linha("Busca Binária", cmp.binaria, bin);
+  const dif = cmp.linear.n_passos - cmp.binaria.n_passos;
+  let texto = dif > 0
+    ? `A Busca Binária resolveu em ${dif} passo(s) a menos. Com n grande essa diferença explode: `
+      + `a Linear é O(n) e a Binária é O(log n).`
+    : `Com esse código e essa lista pequena a Linear não ficou atrás em passos. `
+      + `Teste um código no fim da lista, ou gere uma lista maior, para ver a diferença.`;
+  if (cmp.binaria.custo > cmp.linear.custo) {
+    texto += ` Repare que, mesmo com menos passos, o custo T(n) da Binária ficou maior `
+      + `(${cmp.binaria.custo} contra ${cmp.linear.custo}): cada passo dela é mais caro, pois calcula `
+      + `o meio e faz duas comparações. Com n pequeno esse peso extra não compensa; `
+      + `é a partir de algumas dezenas de produtos que o O(log n) vence.`;
+  }
+  $("legendaComparacao").textContent = texto;
+}
+
+$("btOrdenar").onclick = () => executar("ordenar", { versao: $("versao").value }, animarOrdenacao);
+$("btDesordenar").onclick = () => executar("desordenar", { n: $("qtdGerar").value });
+$("btReiniciar").onclick = () => executar("reiniciar", {});
+$("btInserir").onclick = () => executar("inserir", {
+  codigo: $("insCodigo").value, nome: $("insNome").value, quantidade: $("insQtd").value });
+$("btRemover").onclick = () => executar("remover", { codigo: $("remCodigo").value });
+$("btBinaria").onclick = () => executar("buscar",
+  { codigo: $("busCodigo").value, tipo: "binaria" }, animarBusca);
+$("btLinear").onclick = () => executar("buscar",
+  { codigo: $("busCodigo").value, tipo: "linear" }, animarBusca);
+$("btComparar").onclick = () => executar("comparar", { codigo: $("busCodigo").value });
+
+executar("estado", {});
+</script>
+</body>
+</html>
