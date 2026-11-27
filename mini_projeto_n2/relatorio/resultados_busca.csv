@@ -1,0 +1,19 @@
+experimento,algoritmo,n_vertices,caminho,arestas,custo,visitados,operacoes,tempo_s
+rede_setores,BFS,12,CPD -> Diretoria -> SalaReunioes,2,16,12,26,2.567e-05
+rede_setores,DFS,12,CPD -> Administrativo -> Financeiro -> SalaReunioes,3,13,5,13,1.425e-05
+rede_setores,Dijkstra,12,CPD -> Administrativo -> Financeiro -> Diretoria -> SalaReunioes,4,12,12,31,1.79e-05
+escalabilidade,BFS,100,3 vertices,2,21,62,100,2.026e-05
+escalabilidade,DFS,100,3 vertices,2,21,92,381,7.043e-05
+escalabilidade,Dijkstra,100,5 vertices,4,21,59,268,6.371e-05
+escalabilidade,BFS,500,4 vertices,3,23,236,372,6.523e-05
+escalabilidade,DFS,500,27 vertices,26,272,441,1856,0.00033203
+escalabilidade,Dijkstra,500,4 vertices,3,23,260,1206,0.00026321
+escalabilidade,BFS,1000,5 vertices,4,38,916,2730,0.00031324
+escalabilidade,DFS,1000,16 vertices,15,205,775,3393,0.00057734
+escalabilidade,Dijkstra,1000,8 vertices,7,36,755,3289,0.00071975
+escalabilidade,BFS,5000,6 vertices,5,51,4573,12981,0.00202013
+escalabilidade,DFS,5000,56 vertices,55,594,3640,15946,0.00327715
+escalabilidade,Dijkstra,5000,7 vertices,6,30,1219,5860,0.00216993
+escalabilidade,BFS,10000,5 vertices,4,38,5383,9163,0.00250088
+escalabilidade,DFS,10000,46 vertices,45,469,5995,27587,0.00695807
+escalabilidade,Dijkstra,10000,5 vertices,4,38,4928,22720,0.01041318

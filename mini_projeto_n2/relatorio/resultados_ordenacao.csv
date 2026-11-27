@@ -1,0 +1,76 @@
+n,cenario,algoritmo,tempo_s,comparacoes,movimentacoes
+100,aleatorio,Heap Sort,0.000124,1045,600
+100,aleatorio,Quick Sort (pivo fixo),6e-05,614,372
+100,aleatorio,Quick Sort (mediana de 3),7.5e-05,670,372
+100,aleatorio,Merge Sort,0.000105,545,672
+100,aleatorio,Bubble Sort (base N1),0.000424,4697,2348
+100,ordenado,Heap Sort,0.000124,1081,640
+100,ordenado,Quick Sort (pivo fixo),0.000398,4950,5049
+100,ordenado,Quick Sort (mediana de 3),7.1e-05,669,345
+100,ordenado,Merge Sort,8.2e-05,356,672
+100,ordenado,Bubble Sort (base N1),6e-06,99,0
+100,inverso,Heap Sort,0.000101,944,516
+100,inverso,Quick Sort (pivo fixo),0.000328,4950,2549
+100,inverso,Quick Sort (mediana de 3),8.2e-05,851,496
+100,inverso,Merge Sort,7.7e-05,316,672
+100,inverso,Bubble Sort (base N1),0.00048,4950,4950
+500,aleatorio,Heap Sort,0.000836,7447,4057
+500,aleatorio,Quick Sort (pivo fixo),0.000486,4973,2616
+500,aleatorio,Quick Sort (mediana de 3),0.000495,4735,2407
+500,aleatorio,Merge Sort,0.000679,3852,4488
+500,aleatorio,Bubble Sort (base N1),0.010946,124540,62435
+500,ordenado,Heap Sort,0.000847,7756,4354
+500,ordenado,Quick Sort (pivo fixo),0.010004,124750,125249
+500,ordenado,Quick Sort (mediana de 3),0.000398,4263,2232
+500,ordenado,Merge Sort,0.000566,2272,4488
+500,ordenado,Bubble Sort (base N1),3e-05,499,0
+500,inverso,Heap Sort,0.000723,7010,3676
+500,inverso,Quick Sort (pivo fixo),0.007631,124750,62749
+500,inverso,Quick Sort (mediana de 3),0.000602,6843,4040
+500,inverso,Merge Sort,0.000502,2216,4488
+500,inverso,Bubble Sort (base N1),0.012494,124750,124750
+1000,aleatorio,Heap Sort,0.001876,16894,9111
+1000,aleatorio,Quick Sort (pivo fixo),0.000994,11972,7011
+1000,aleatorio,Quick Sort (mediana de 3),0.001102,11447,5766
+1000,aleatorio,Merge Sort,0.001478,8705,9976
+1000,aleatorio,Bubble Sort (base N1),0.044227,499329,239421
+1000,ordenado,Heap Sort,0.001866,17583,9708
+1000,ordenado,Quick Sort (pivo fixo),0.041752,499500,500499
+1000,ordenado,Quick Sort (mediana de 3),0.000924,9520,4960
+1000,ordenado,Merge Sort,0.001181,5044,9976
+1000,ordenado,Bubble Sort (base N1),6.4e-05,999,0
+1000,inverso,Heap Sort,0.001693,15965,8316
+1000,inverso,Quick Sort (pivo fixo),0.032795,499500,250499
+1000,inverso,Quick Sort (mediana de 3),0.001415,15995,9464
+1000,inverso,Merge Sort,0.00114,4932,9976
+1000,inverso,Bubble Sort (base N1),0.053395,499500,499500
+5000,aleatorio,Heap Sort,0.012043,107515,56998
+5000,aleatorio,Quick Sort (pivo fixo),0.006122,78890,37128
+5000,aleatorio,Quick Sort (mediana de 3),0.006405,67329,34401
+5000,aleatorio,Merge Sort,0.009074,55230,61808
+5000,aleatorio,Bubble Sort (base N1),1.191285,12492247,6250569
+5000,ordenado,Heap Sort,0.011865,112147,60909
+5000,ordenado,Quick Sort (pivo fixo),1.060183,12497500,12502499
+5000,ordenado,Quick Sort (mediana de 3),0.005626,60678,30720
+5000,ordenado,Merge Sort,0.007131,32004,61808
+5000,ordenado,Bubble Sort (base N1),0.000315,4999,0
+5000,inverso,Heap Sort,0.010764,103222,53426
+5000,inverso,Quick Sort (pivo fixo),0.809204,12465322,6236396
+5000,inverso,Quick Sort (mediana de 3),0.009121,108443,64521
+5000,inverso,Merge Sort,0.00702,29810,61808
+5000,inverso,Bubble Sort (base N1),1.458075,12497500,12497487
+10000,aleatorio,Heap Sort,0.031189,235163,124150
+10000,aleatorio,Quick Sort (pivo fixo),0.013712,154959,82701
+10000,aleatorio,Quick Sort (mediana de 3),0.016981,150170,72146
+10000,aleatorio,Merge Sort,0.022025,120485,133616
+10000,aleatorio,Bubble Sort (base N1),5.043063,49994847,25050317
+10000,ordenado,Heap Sort,0.02645,244512,131777
+10000,ordenado,Quick Sort (pivo fixo),4.538385,49995000,50004999
+10000,ordenado,Quick Sort (mediana de 3),0.012858,131347,66449
+10000,ordenado,Merge Sort,0.016365,69008,133616
+10000,ordenado,Bubble Sort (base N1),0.000701,9999,0
+10000,inverso,Heap Sort,0.025928,226701,116709
+10000,inverso,Quick Sort (pivo fixo),3.514897,49792908,24907744
+10000,inverso,Quick Sort (mediana de 3),0.0213,241933,144179
+10000,inverso,Merge Sort,0.015751,64630,133616
+10000,inverso,Bubble Sort (base N1),6.061632,49995000,49994959
