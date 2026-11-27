@@ -1,0 +1,5 @@
+# Apenas para os graficos e para gerar os documentos.
+# Os algoritmos do projeto usam somente a biblioteca padrao do Python.
+matplotlib>=3.5
+python-docx>=1.0
+python-pptx>=0.6
